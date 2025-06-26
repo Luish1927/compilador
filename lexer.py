@@ -1,6 +1,5 @@
 import re
 
-# Dicionários de mapeamento para os tipos de tokens
 KEYWORDS = {
     'if': 'KEYWORD_IF',
     'else': 'KEYWORD_ELSE',
@@ -60,7 +59,7 @@ TOKEN_SPECIFICATION = [
     ('OPERATOR_SINGLE', r'[+\-*/%=!<>]'), # Operadores de um único caractere
     ('DELIMITER_MULTI', r'\{\}|\(\)|\[\]'), # Delimitadores de múltiplos caracteres (não estritamente necessários para este lexer, mas para completar)
     ('DELIMITER_SINGLE', r'[{}(),;\[\]]'), # Delimitadores de um único caractere
-    ('IDENTIFIER', r'[a-zA-Z_][a-zA-Z0-9_]*'), # Identificadores
+    ('ID', r'[a-zA-Z_][a-zA-Z0-9_]*'), # Identificadores
     ('WHITESPACE', r'\s+'),           # Espaços em branco (serão ignorados)
     ('MISMATCH', r'.'),               # Qualquer outro caractere (para erros)
 ]
@@ -81,16 +80,16 @@ class Lexer:
             if match is None:
                 raise SyntaxError(f"Caractere inesperado na posição {self.pos}: '{self.text[self.pos]}'")
 
-            kind = match.lastgroup # Nome do grupo capturado (ex: 'INT_LITERAL')
-            value = match.group(kind) # O texto que foi correspondido (ex: '123')
+            kind = match.lastgroup
+            value = match.group(kind) 
 
             if kind == 'WHITESPACE':
-                pass # Ignorar espaços em branco
+                pass 
             elif kind == 'COMMENT':
-                pass # Ignorar comentários
-            elif kind == 'IDENTIFIER':
+                pass 
+            elif kind == 'ID':
                 # Verificar se o identificador é uma palavra-chave
-                token_type = KEYWORDS.get(value, 'IDENTIFIER')
+                token_type = KEYWORDS.get(value, 'ID')
                 self.tokens.append((token_type, value))
             elif kind == 'OPERATOR_MULTI':
                 token_type = OPERATORS.get(value, 'UNKNOWN_OPERATOR')
@@ -122,54 +121,8 @@ class Lexer:
 
 # --- Exemplo de Uso ---
 if __name__ == "__main__":
-    # Crie um arquivo de exemplo com sua nova linguagem
-    sample_code_tt = """
-// Este é um programa de exemplo em STL
-func main() {
-    var int x = 10; // Declara e inicializa um inteiro
-    var float pi = 3.14;
-    var bool isActive = true;
 
-    if (x > 5 && isActive) {
-        print("x é maior que 5 e está ativo!");
-        x = x + 1;
-    } else {
-        print("x não é maior que 5 ou não está ativo.");
-    }
-
-    // Loop simples
-    var int i = 0;
-    while (i < 3) {
-        print(i);
-        i = i + 1;
-    }
-
-    var string message = "Hello, world!";
-    print(message);
-
-    // Exemplo com char
-    var char firstChar = 'A';
-    print(firstChar);
-    
-    // Teste de operadores
-    var int result = (10 * 2) % 3; // result = 20 % 3 = 2
-    print(result);
-
-    var float avg = 10.5 / 2.0;
-    print(avg);
-    
-    var int num1 = 7;
-    var int num2 = 7;
-    if (num1 == num2) {
-        print("num1 é igual a num2.");
-    }
-}
-    """
-    
     file_name = "example.tt"
-    with open(file_name, "w") as f:
-        f.write(sample_code_tt.strip())
-
     print(f"Lendo e analisando o arquivo: {file_name}\n")
     
     try:

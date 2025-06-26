@@ -1,0 +1,40 @@
+// Este é um programa de exemplo em STL
+func main() {
+    var int x = 10; // Declara e inicializa um inteiro
+    var float pi = 3.14;
+    var bool isActive = true;
+
+    if (x > 5 && isActive) {
+        print("x é maior que 5 e está ativo!");
+        x = x + 1;
+    } else {
+        print("x não é maior que 5 ou não está ativo.");
+    }
+
+    // Loop simples
+    var int i = 0;
+    while (i < 3) {
+        print(i);
+        i = i + 1;
+    }
+
+    var string message = "Hello, world!";
+    print(message);
+
+    // Exemplo com char
+    var char firstChar = 'A';
+    print(firstChar);
+    
+    // Teste de operadores
+    var int result = (10 * 2) % 3; // result = 20 % 3 = 2
+    print(result);
+
+    var float avg = 10.5 / 2.0;
+    print(avg);
+    
+    var int num1 = 7;
+    var int num2 = 7;
+    if (num1 == num2) {
+        print("num1 é igual a num2.");
+    }
+}

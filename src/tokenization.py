@@ -4,6 +4,8 @@ from typing import Optional
 
 from auxiliary import Auxiliary
 
+# Adicionar operadores lógicos e relacionais
+
 class TokenType(Enum):
     EXIT = "exit"
     INT_LIT = "int_lit"
@@ -18,6 +20,12 @@ class TokenType(Enum):
     CHAR = 'char'
     INT = 'int'
     FLOAT = 'float'
+    ASSIGN = 'assign'
+    # Logical Operators
+    ########################################
+    OR = 'or'
+    AND = 'and'
+    NOT = 'not'
     # Operators
     ########################################
     EQUAL = 'equal'
@@ -30,18 +38,33 @@ class TokenType(Enum):
     COLON = 'colon'
     COMMA = 'comma'
     SEMI = 'semi'
+    LBRACE = 'lbrace'
+    RBRACE = 'rbrace'
+    GREATER = 'greater'
+    LESS = 'less'
+    GREATER_EQUAL = 'greater_equal'
+    LESS_EQUAL = 'less_equal'
+    NOT_EQUAL = 'not_equal'
 
 OPERATORS = {
     '+': TokenType.PLUS,
     '-': TokenType.MINUS,
     '*': TokenType.STAR,
     '/': TokenType.SLASH,
-    '=': TokenType.EQUAL,
+    '=': TokenType.ASSIGN,
     '(': TokenType.LPAREN,
     ')': TokenType.RPAREN,
     ':': TokenType.COLON,
     ',': TokenType.COMMA,
     ';': TokenType.SEMI,
+    '{': TokenType.LBRACE,
+    '}': TokenType.RBRACE,
+    '==': TokenType.EQUAL,
+    '>': TokenType.GREATER,
+    '<': TokenType.LESS,
+    '>=': TokenType.GREATER_EQUAL,
+    '<=': TokenType.LESS_EQUAL,
+    '!=': TokenType.NOT_EQUAL,  
 }
 
 
@@ -56,6 +79,9 @@ RESERVED_KEYWORDS = {
     'char': TokenType.CHAR,
     'int': TokenType.INT,
     'float': TokenType.FLOAT,
+    'or': TokenType.OR,
+    'and': TokenType.AND,
+    'not': TokenType.NOT,
 }
 
 @dataclass
@@ -102,8 +128,20 @@ class Tokenizer:
                     tokens.append(Token(TokenType.INT_LIT, buf))
                     continue
                         
-            elif aux.peak() in OPERATORS:
-                tokens.append(Token(OPERATORS[aux.consume()]))
+            elif aux.peak(1) in OPERATORS or (
+                aux.peak(1) is not None and aux.peak(2) is not None and (aux.peak(1) + aux.peak(2)) in OPERATORS
+            ):
+                first = aux.peak(1)
+                second = aux.peak(2)
+
+                if second is not None and (first + second) in OPERATORS:
+                    aux.consume()  
+                    aux.consume()  
+                    tokens.append(Token(OPERATORS[first + second]))
+                    continue
+
+                aux.consume()
+                tokens.append(Token(OPERATORS[first]))
                 continue
 
             elif aux.peak().isspace():

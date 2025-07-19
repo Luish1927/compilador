@@ -45,6 +45,24 @@ class TokenType(Enum):
     GREATER_EQUAL = 'greater_equal'
     LESS_EQUAL = 'less_equal'
     NOT_EQUAL = 'not_equal'
+    BOOL = 'bool'
+    STRING = 'string'
+    TRUE = 'true'
+    FALSE = 'false'
+    BREAK = 'break'
+    CONTINUE = 'continue'
+    FUNC = 'func'
+    FOR = 'for'
+    # Literais
+    STRING_LIT = 'string_lit'
+    BOOL_LIT = 'bool_lit'
+
+    # Operadores de atribuição composta
+    PLUS_ASSIGN = 'plus_assign'        # +=
+    MINUS_ASSIGN = 'minus_assign'      # -=
+    STAR_ASSIGN = 'star_assign'        # *=
+    SLASH_ASSIGN = 'slash_assign'      # /=
+
 
 OPERATORS = {
     '+': TokenType.PLUS,
@@ -64,8 +82,14 @@ OPERATORS = {
     '<': TokenType.LESS,
     '>=': TokenType.GREATER_EQUAL,
     '<=': TokenType.LESS_EQUAL,
-    '!=': TokenType.NOT_EQUAL,  
+    '!=': TokenType.NOT_EQUAL,
+    # Atribuição composta
+    '+=': TokenType.PLUS_ASSIGN,
+    '-=': TokenType.MINUS_ASSIGN,
+    '*=': TokenType.STAR_ASSIGN,
+    '/=': TokenType.SLASH_ASSIGN,
 }
+
 
 
 RESERVED_KEYWORDS = {
@@ -73,16 +97,25 @@ RESERVED_KEYWORDS = {
     'if': TokenType.IF,
     'else': TokenType.ELSE,
     'while': TokenType.WHILE,
+    'for': TokenType.FOR,
+    'func': TokenType.FUNC,
     'print': TokenType.PRINT,
     'read': TokenType.READ,
     'do': TokenType.DO,
     'char': TokenType.CHAR,
     'int': TokenType.INT,
     'float': TokenType.FLOAT,
+    'bool': TokenType.BOOL,
+    'string': TokenType.STRING,
+    'true': TokenType.TRUE,
+    'false': TokenType.FALSE,
+    'break': TokenType.BREAK,
+    'continue': TokenType.CONTINUE,
     'or': TokenType.OR,
     'and': TokenType.AND,
     'not': TokenType.NOT,
 }
+
 
 @dataclass
 class Token:

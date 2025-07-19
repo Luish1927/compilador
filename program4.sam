@@ -1,0 +1,18 @@
+ADDSP 1
+PUSHIMM 2
+STOREOFF 0
+PUSHIMM 0 # Adicionando espaço para o retorno da função na pilha
+PUSHOFF 0 # Adicionando parâmetro da função na pilha
+LINK # Cria um novo frame e salva FBR na pilha
+JSR funcao # Muda o PC para o código da função
+POPFBR
+ADDSP -1 # Remove o parâmetro da função empilhado (se JSR consome 1 para o retorno + 1 para o parametro, precisa ser -2 ou ajustar)
+STOREOFF 0 # Armazena o resultado da função na variável local da main
+ADDSP -1 # Remove a variável local da main
+STOP
+funcao:
+PUSHOFF -1 # Recupera valor do parâmetro (x) e o insere na pilha (posição antes do FBR)
+PUSHIMM 1
+ADD
+STOREOFF -2 # Atribui ao retorno da função o resultado da função (posição antes do FBR)
+JUMPIND # Retorna para a main (o endereço de retorno está na pilha)

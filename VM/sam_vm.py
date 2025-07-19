@@ -166,30 +166,25 @@ EXIT
     # --- Exemplo de programa SAMCODE 3: main(){ int x,y,z; x=5; y=3; while(x>y){ z=x+y; y++; } } ---
     # Salve isso em um arquivo chamado 'program3.sam'
     sam_code_example3 = """
-ADDSP 3
-PUSHIMM 5
+ADDSP 1
+PUSHIMM 2
 STOREOFF 0
-PUSHIMM 3
-STOREOFF 1
-label_while:
-PUSHOFF 0
-PUSHOFF 1
-GREATER
-ISNIL
-JUMPC label_endwhile
-# Loop body
-PUSHOFF 0
-PUSHOFF 1
-ADD
-STOREOFF 2
-PUSHOFF 1
+PUSHIMM 0 
+PUSHOFF 0 
+LINK 
+JSR funcao 
+POPFBR
+ADDSP -1 
+STOREOFF 0 
+ADDSP -1
+STOP
+funcao:
+PUSHOFF -1
 PUSHIMM 1
 ADD
-STOREOFF 1
-JUMP label_while
-label_endwhile:
-ADDSP -3
-EXIT
+STOREOFF -2
+JUMPIND
+
     """
     with open("program3.sam", "w") as f:
         f.write(sam_code_example3.strip())

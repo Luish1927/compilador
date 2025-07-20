@@ -41,7 +41,7 @@
 
 <DoWhileStatement>  → 'do' <Statement> 'while' '(' <Expression> ')' ';'
 
-<ForStatement>      → 'for' '(' <Assignment> <Expression> ';' <Assignment> ')' <Statement>
+<ForStatement>      → 'for' '(' <AssignmentExpression> ';' <Expression> ';' <AssignmentExpression> ')' <Statement>
 
 <BreakStatement>    → 'break' ';'
 

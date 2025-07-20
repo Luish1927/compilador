@@ -2,7 +2,7 @@ from enum import Enum
 from dataclasses import dataclass
 from typing import Optional
 
-from auxiliary import Auxiliary
+from utils.tokenizer_auxiliary import TokenizerAuxiliary
 
 # Adicionar operadores lógicos e relacionais
 
@@ -40,6 +40,8 @@ class TokenType(Enum):
     SEMI = 'semi'
     LBRACE = 'lbrace'
     RBRACE = 'rbrace'
+    LBRACKET = 'lbracket'  # Usado para arrays
+    RBRACKET = 'rbracket'
     GREATER = 'greater'
     LESS = 'less'
     GREATER_EQUAL = 'greater_equal'
@@ -62,6 +64,7 @@ class TokenType(Enum):
     MINUS_ASSIGN = 'minus_assign'      # -=
     STAR_ASSIGN = 'star_assign'        # *=
     SLASH_ASSIGN = 'slash_assign'      # /=
+    EOF = 'eof'
 
 
 OPERATORS = {
@@ -88,6 +91,8 @@ OPERATORS = {
     '-=': TokenType.MINUS_ASSIGN,
     '*=': TokenType.STAR_ASSIGN,
     '/=': TokenType.SLASH_ASSIGN,
+    '[': TokenType.LBRACKET,  # Usado para arrays
+    ']': TokenType.RBRACKET,
 }
 
 
@@ -129,7 +134,7 @@ class Tokenizer:
 
     def tokenizer(self) -> list[Token]:
         """Tokenizes the input string into a list of tokens."""
-        aux = Auxiliary(self.content)
+        aux = TokenizerAuxiliary(self.content)
         tokens = []
         while aux.peak() is not None:
             if aux.peak().isalpha() or aux.peak() == '_':
@@ -160,6 +165,22 @@ class Tokenizer:
                     buf = aux.create_buffer(self.buffer)
                     tokens.append(Token(TokenType.INT_LIT, buf))
                     continue
+            
+            elif aux.peak() == '"':
+                aux.consume() # Consome a aspa de abertura "
+                
+                while aux.peak() is not None and aux.peak() != '"':
+                    self.buffer.append(aux.consume())
+                
+                # Verifica se a string foi terminada corretamente
+                if aux.peak() is None:
+                    raise RuntimeError("String não terminada. Esperado '\"'.")
+                
+                aux.consume() # Consome a aspa de fechamento "
+                
+                buf = aux.create_buffer(self.buffer)
+                tokens.append(Token(TokenType.STRING_LIT, buf))
+                continue
                         
             elif aux.peak(1) in OPERATORS or (
                 aux.peak(1) is not None and aux.peak(2) is not None and (aux.peak(1) + aux.peak(2)) in OPERATORS

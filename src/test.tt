@@ -1,6 +1,6 @@
 func main() {
-    int x = 10 + 5;
-    if (x > 12) {
-        print("maior");
+    int x = 10;
+    if (x > 5) {
+        print("tudo certo");
     }
 }

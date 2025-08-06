@@ -1,6 +1,14 @@
+func add(int a, int b) {
+    int result = a + b;
+    print("Soma:", result);
+    exit;
+}
+
 func main() {
     int x = 10;
-    if (x > 5) {
-        print("tudo certo");
-    }
+    int y = 5;
+
+    add(x, y);
+
+    print("Este código nunca será executado.");
 }

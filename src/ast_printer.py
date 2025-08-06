@@ -22,6 +22,12 @@ class ASTPrinter:
             self._visit_if(node, indent)
         elif isinstance(node, NodePrint):
             self._visit_print(node, indent)
+        elif isinstance(node, NodeWhile):
+            self._visit_while(node, indent)
+        elif isinstance(node, NodeFor):
+            self._visit_for(node, indent)
+        elif isinstance(node, NodeDoWhile):
+            self._visit_do_while(node, indent)
         elif isinstance(node, NodeBinOp):
             self._visit_bin_op(node, indent)
         elif isinstance(node, NodeUnaryOp):
@@ -40,11 +46,69 @@ class ASTPrinter:
             self._visit_array_access(node, indent)
         elif isinstance(node, NodeAssignment):
             self._visit_assignment(node, indent)
+        elif isinstance(node, NodeFunctionCall):
+            self._visit_function_call(node, indent)
+        elif isinstance(node, NodeExprStmt):  # Adicione esta linha
+            self._visit_expr_stmt(node, indent)
+        elif isinstance(node, NodeExit):
+            self._visit_exit(node, indent)
         # Adicione outros nós conforme necessário (for, while, etc.)
         else:
             print(f"{indent}Nó desconhecido: {type(node).__name__}")
 
     # --- Métodos de Visita Específicos ---
+
+    def _visit_exit(self, node: NodeExit, indent: str):
+        print(f"{indent}- Comando 'exit' (NodeExit)")
+
+    def _visit_function_call(self, node: NodeFunctionCall, indent: str):
+        print(f"{indent}- Chamada de Função (NodeFunctionCall)")
+        child_indent = indent + "    "
+        print(f"{child_indent}- Callee: {node.callee.value}")
+        if node.args:
+            print(f"{child_indent}- Argumentos:")
+            for i, arg in enumerate(node.args):
+                 print(f"{child_indent}    - Argumento {i+1}:")
+                 self._visit(arg, child_indent + "        ")
+        else:
+            print(f"{child_indent}- Argumentos: (nenhum)")
+
+    def _visit_expr_stmt(self, node: NodeExprStmt, indent: str):
+        print(f"{indent}- Comando de Expressão (NodeExprStmt)")
+        child_indent = indent + "    "
+        print(f"{child_indent}- Expressão:")
+        self._visit(node.expression, child_indent + "    ")
+
+    def _visit_while(self, node: NodeWhile, indent: str):
+        print(f"{indent}- Loop 'while' (NodeWhile)")
+        child_indent = indent + "    "
+        print(f"{child_indent}- Condição:")
+        self._visit(node.condition, child_indent + "    ")
+        print(f"{child_indent}- Corpo do Loop:")
+        self._visit(node.body, child_indent + "    ")
+
+    def _visit_for(self, node: NodeFor, indent: str):
+        print(f"{indent}- Loop 'for' (NodeFor)")
+        child_indent = indent + "    "
+        if node.initializer:
+            print(f"{child_indent}- Inicializador:")
+            self._visit(node.initializer, child_indent + "    ")
+        if node.condition:
+            print(f"{child_indent}- Condição:")
+            self._visit(node.condition, child_indent + "    ")
+        if node.increment:
+            print(f"{child_indent}- Incremento:")
+            self._visit(node.increment, child_indent + "    ")
+        print(f"{child_indent}- Corpo do Loop:")
+        self._visit(node.body, child_indent + "    ")
+
+    def _visit_do_while(self, node: NodeDoWhile, indent: str):
+        print(f"{indent}- Loop 'do-while' (NodeDoWhile)")
+        child_indent = indent + "    "
+        print(f"{child_indent}- Corpo do Loop:")
+        self._visit(node.body, child_indent + "    ")
+        print(f"{child_indent}- Condição:")
+        self._visit(node.condition, child_indent + "    ")
 
     def _visit_program(self, node: NodeProgram, indent: str):
         print(f"{indent}- Programa (NodeProgram)")

@@ -93,7 +93,7 @@ class NodeDeclaration(NodeStmt):
     initializer_expr: Optional[NodeExpr] = None
 
 @dataclass
-class NodeAssignment(NodeStmt):
+class NodeAssignment(NodeExpr):
     identifier: Token
     value: NodeExpr
     op: Token # '=', '+=', '-=', etc.
@@ -117,9 +117,9 @@ class NodeDoWhile(NodeStmt):
 
 @dataclass
 class NodeFor(NodeStmt):
-    initializer: Optional[NodeAssignment]
+    initializer: Optional[Union[NodeAssignment, NodeExpr]]
     condition: Optional[NodeExpr]
-    increment: Optional[NodeAssignment]
+    increment: Optional[Union[NodeAssignment, NodeExpr]]
     body: NodeStmt
 
 @dataclass

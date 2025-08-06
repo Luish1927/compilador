@@ -201,24 +201,41 @@ JUMPIND
     # --- Exemplo de programa SAMCODE 4: int f(int x){ x++; return x; } main(){ int x=2; x=f(x); } ---
     # Salve isso em um arquivo chamado 'program4.sam'
     sam_code_example4 = """
+JUMP main_entry
+add:
 ADDSP 1
-PUSHIMM 2
-STOREOFF 0
-PUSHIMM 0 # Adicionando espaço para o retorno da função na pilha
-PUSHOFF 0 # Adicionando parâmetro da função na pilha
-LINK # Cria um novo frame e salva FBR na pilha
-JSR funcao # Muda o PC para o código da função
-POPFBR
-ADDSP -1 # Remove o parâmetro da função empilhado (se JSR consome 1 para o retorno + 1 para o parametro, precisa ser -2 ou ajustar)
-STOREOFF 0 # Armazena o resultado da função na variável local da main
-ADDSP -1 # Remove a variável local da main
-STOP
-funcao:
-PUSHOFF -1 # Recupera valor do parâmetro (x) e o insere na pilha (posição antes do FBR)
-PUSHIMM 1
+LINK
+ADDSP 1
+PUSHOFF -2
+PUSHOFF -1
 ADD
-STOREOFF -2 # Atribui ao retorno da função o resultado da função (posição antes do FBR)
-JUMPIND # Retorna para a main (o endereço de retorno está na pilha)
+STOREOFF 1
+PUSHIMMSTR "Soma:"
+WRITESTR
+PUSHOFF 1
+WRITE
+EXIT
+ADDSP -1
+POPFBR
+POPSP
+JUMPIND
+main_entry:
+ADDSP 2
+ADDSP 2
+PUSHIMM 10
+STOREOFF 1
+PUSHIMM 5
+STOREOFF 2
+PUSHIMM 0
+PUSHOFF 1
+PUSHOFF 2
+JSR add
+ADDSP -3
+ADDSP -1
+PUSHIMMSTR "Este cÃ³digo nunca serÃ¡ executado."
+WRITESTR
+ADDSP -2
+STOP
     """
     with open("program4.sam", "w") as f:
         f.write(sam_code_example4.strip())
@@ -228,30 +245,3 @@ JUMPIND # Retorna para a main (o endereço de retorno está na pilha)
     vm.run()
     print("Estado final da pilha:", vm.stack)
     print("Valor final de x na main (esperado 3): ", vm.stack[vm.fbr+0] if vm.fbr+0 < len(vm.stack) else "Não definido")
-
-    # Exemplo de I/O
-    sam_code_io = """
-PUSHIMMSTR "Digite um inteiro: "
-WRITESTR
-READ
-WRITE
-PUSHIMMSTR "Digite um float: "
-WRITESTR
-READF
-WRITEF
-PUSHIMMSTR "Digite um caractere: "
-WRITESTR
-READCH
-WRITECH
-PUSHIMMSTR "Digite uma string: "
-WRITESTR
-READSTR
-WRITESTR
-EXIT
-    """
-    with open("program_io.sam", "w") as f:
-        f.write(sam_code_io.strip())
-
-    print("\n--- Executando program_io.sam ---")
-    vm.load_program("program_io.sam")
-    vm.run()

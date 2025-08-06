@@ -1,0 +1,97 @@
+JUMP main_entry
+
+func_add:
+ADDSP 1
+LINK
+# Parâmetros: 'a' em offset -2, 'b' em offset -1
+# Variável local: 'result' em offset 0
+# Acessando 'a'
+PUSHOFF -2
+# Acessando 'b'
+PUSHOFF -1
+ADD
+STOREOFF 0
+# Retorno da função
+PUSHOFF 0
+STOREOFF -3
+POPFBR
+POPSP
+JUMPIND
+
+main_entry:
+ADDSP 3
+# int counter = 0;
+PUSHIMM 0
+STOREOFF 0
+# string message = "Starting the test.";
+PUSHIMMSTR "Starting the test."
+STOREOFF 1
+# print(message);
+PUSHOFF 1
+WRITESTR
+
+# for (int i = 0; i < 3; i = i + 1)
+# Inicializador do for: int i = 0
+PUSHIMM 0
+STOREOFF 2
+L_FOR_START1:
+# Condição: i < 3
+PUSHOFF 2
+PUSHIMM 3
+LESS
+NOT
+JUMPC L_FOR_END2
+# Corpo do loop
+# counter = counter + 1;
+PUSHOFF 0
+PUSHIMM 1
+ADD
+STOREOFF 0
+# print("Loop iteration:", i);
+PUSHIMMSTR "Loop iteration:"
+WRITESTR
+PUSHOFF 2
+WRITE
+# Incremento: i = i + 1
+L_FOR_INC3:
+PUSHOFF 2
+PUSHIMM 1
+ADD
+STOREOFF 2
+JUMP L_FOR_START1
+L_FOR_END2:
+
+# if (counter > 2)
+PUSHOFF 0
+PUSHIMM 2
+GREATER
+NOT
+JUMPC L_ELSE4
+# then branch
+PUSHIMMSTR "Counter is greater than 2."
+WRITESTR
+JUMP L_ENDIF5
+# else branch
+L_ELSE4:
+PUSHIMMSTR "Counter is not greater than 2."
+WRITESTR
+L_ENDIF5:
+
+# int final_value = add(counter, 10);
+# Placeholder para o valor de retorno
+PUSHIMM 0
+# Argumentos
+PUSHOFF 0
+PUSHIMM 10
+JSR func_add
+# Armazena o valor de retorno
+STOREOFF 3
+ADDSP -3
+
+# print("Final result:", final_value);
+PUSHIMMSTR "Final result:"
+WRITESTR
+PUSHOFF 3
+WRITE
+
+STOP

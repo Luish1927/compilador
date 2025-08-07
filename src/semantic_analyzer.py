@@ -49,10 +49,8 @@ class SemanticAnalyzer:
         func_name = node.name.value
         param_types = [p.param_type.type for p in node.params]
         
-        # Armazena os tipos dos parâmetros em um dicionário separado
         self.function_params[func_name] = param_types
         
-        # Cria o símbolo da função sem os parâmetros, para compatibilidade com SymbolTable
         func_symbol = Symbol(name=func_name, type=TokenType.FUNC)
         self.symbol_table.define(func_symbol)
 
@@ -92,9 +90,7 @@ class SemanticAnalyzer:
         self.symbol_table.define(symbol)
         
     def _visit_NodeAssignment(self, node: NodeAssignment):
-        # A atribuição pode ser para uma variável simples ou um elemento de array
         if node.array_index_expr:
-            # Atribuição a um elemento de array
             var_name = node.identifier.value
             symbol = self.symbol_table.lookup(var_name)
             if not symbol:
@@ -180,8 +176,6 @@ class SemanticAnalyzer:
 
     def _visit_NodeExprStmt(self, node: NodeExprStmt):
         self._visit(node.expression)
-
-    # --- Métodos de Visita para Expressões (Retornam um Tipo) ---
 
     def _visit_NodeBinOp(self, node: NodeBinOp) -> TokenType:
         left_type = self._visit(node.left)

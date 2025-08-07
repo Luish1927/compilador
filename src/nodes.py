@@ -3,8 +3,6 @@ from typing import List, Union, Optional
 from abc import ABC
 from tokenization import Token 
 
-# --- Base Classes ---
-
 class Node(ABC):
     """Nó base para todos os nós da AST."""
     pass
@@ -16,8 +14,6 @@ class NodeStmt(Node):
 class NodeExpr(Node):
     """Nó base para todas as expressões."""
     pass
-
-# --- Nós de Expressão (já existentes e novos) ---
 
 @dataclass
 class NodeIntLiteral(NodeExpr):
@@ -63,8 +59,6 @@ class NodeGrouping(NodeExpr):
 class NodeFunctionCall(NodeExpr):
     callee: Token
     args: List[NodeExpr]
-
-# --- Nós de Declaração e Estrutura (novos) ---
 
 @dataclass
 class NodeProgram(Node):

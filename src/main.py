@@ -1,13 +1,15 @@
 # main.py
 
+import os
 from tokenization import Tokenizer
 from parser import Parser
 from ast_printer import ASTPrinter
-from semantic_analyzer import SemanticAnalyzer, SemanticError # 1. Importe o analisador e o erro
+from semantic_analyzer import SemanticAnalyzer, SemanticError
+from code_generator import CodeGenerator
 
 # --- Leitura do Arquivo ---
 try:
-    with open("test.tt", "r") as file:
+    with open("C:\\development\\pessoal\\compilador\\code\\test.tt", "r") as file:
         content = file.read()
 except FileNotFoundError:
     print("Arquivo 'test.tt' não encontrado.")
@@ -17,14 +19,19 @@ except FileNotFoundError:
 if content:
     try:
         # Etapa 1: Análise Léxica
+        print("--- ANÁLISE LÉXICA ---")
         tokenizer = Tokenizer(content)
         tokens = tokenizer.tokenizer()
+        print("Análise léxica concluída. Tokens gerados.")
 
         # Etapa 2: Análise Sintática
+        print("\n--- ANÁLISE SINTÁTICA ---")
         parser = Parser(tokens)
         ast = parser.parse()
-
+        print("Análise sintática concluída. AST gerada.")
+        
         # Etapa 3: Análise Semântica
+        print("\n--- ANÁLISE SEMÂNTICA ---")
         semantic_analyzer = SemanticAnalyzer()
         semantic_analyzer.analyze(ast)
         print("Análise semântica concluída com sucesso!")
@@ -35,11 +42,24 @@ if content:
         printer.print(ast)
         print("------------------------------------------")
 
+        # Etapa 5: Geração de Código
+        print("\n--- GERAÇÃO DE CÓDIGO ---")
+        code_generator = CodeGenerator()
+        sam_code = code_generator.generate(ast)
+
+        output_filename = "C:\\development\\pessoal\\compilador\\file\\output.sam"
+        with open(output_filename, "w") as f:
+            f.write(sam_code)
+        
+        print(f"Geração de código concluída. Código SAM salvo em '{output_filename}'.")
+        print("--- CÓDIGO SAM GERADO ---")
+        print(sam_code)
+
     except RuntimeError as e:
         print(f"Erro léxico: {e}")
     except SyntaxError as e:
         print(f"Erro de sintaxe: {e}")
-    except SemanticError as e: # 2. Capture os erros semânticos
+    except SemanticError as e:
         print(f"{e}")
-    except Exception as e: # Captura de erro da Tabela de Símbolos
-        print(f"{e}")
+    except Exception as e:
+        print(f"Erro inesperado: {e}")

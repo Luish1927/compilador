@@ -1,4 +1,3 @@
-# code_generator.py
 
 from nodes import *
 from tokenization import TokenType
@@ -21,7 +20,6 @@ class CodeGenerator:
         self.symbol_table_stack[-1][name] = offset
     
     def _get_symbol_offset(self, name):
-        # O offset retornado é o offset real em relação ao FBR.
         for scope in reversed(self.symbol_table_stack):
             if name in scope:
                 return scope[name]

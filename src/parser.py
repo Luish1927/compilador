@@ -88,10 +88,6 @@ class Parser:
         body = self._parse_block()
         return NodeFunctionDecl(name=name, params=params, body=body)
 
-    # parser.py
-
-    # Em parser.py
-
     def _parse_if_statement(self) -> NodeIf:
         self._consume(TokenType.LPAREN, "Esperado '(' após 'if'")
         condition = self._parse_expression()
@@ -112,17 +108,12 @@ class Parser:
         body = self._parse_statement() # CORREÇÃO AQUI
         return NodeWhile(condition=condition, body=body)
 
-    # Adicionar a mesma lógica para _parse_for_statement e _parse_do_while_statement
     def _parse_for_statement(self) -> NodeFor:
         self._consume(TokenType.LPAREN, "Esperado '(' após 'for'")
         
         initializer = None
-        # AQUI É A CORREÇÃO PRINCIPAL:
-        # Se o token atual é um tipo (int, float, etc.), parse uma declaração.
-        # Caso contrário, se não for um ';' imediatamente, parse uma expressão.
         if self._current().type in [TokenType.INT, TokenType.FLOAT, TokenType.CHAR, TokenType.STRING, TokenType.BOOL]:
             initializer = self._parse_declaration()
-            # A declaração já consome o ';', então não precisamos consumi-lo de novo.
         elif not self._current().type == TokenType.SEMI:
             initializer = self._parse_expression()
             self._consume(TokenType.SEMI, "Esperado ';' após a inicialização do for")

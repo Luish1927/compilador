@@ -1,5 +1,3 @@
-# ast_printer.py
-
 from nodes import *
 from tokenization import Token, TokenType
 
@@ -48,11 +46,10 @@ class ASTPrinter:
             self._visit_assignment(node, indent)
         elif isinstance(node, NodeFunctionCall):
             self._visit_function_call(node, indent)
-        elif isinstance(node, NodeExprStmt):  # Adicione esta linha
+        elif isinstance(node, NodeExprStmt): 
             self._visit_expr_stmt(node, indent)
         elif isinstance(node, NodeExit):
             self._visit_exit(node, indent)
-        # Adicione outros nós conforme necessário (for, while, etc.)
         else:
             print(f"{indent}Nó desconhecido: {type(node).__name__}")
 

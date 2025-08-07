@@ -21,13 +21,9 @@ class TokenType(Enum):
     INT = 'int'
     FLOAT = 'float'
     ASSIGN = 'assign'
-    # Logical Operators
-    ########################################
     OR = 'or'
     AND = 'and'
     NOT = 'not'
-    # Operators
-    ########################################
     EQUAL = 'equal'
     PLUS = 'plus'
     MINUS = 'minus'
@@ -55,11 +51,8 @@ class TokenType(Enum):
     CONTINUE = 'continue'
     FUNC = 'func'
     FOR = 'for'
-    # Literais
     STRING_LIT = 'string_lit'
     BOOL_LIT = 'bool_lit'
-
-    # Operadores de atribuição composta
     PLUS_ASSIGN = 'plus_assign'        # +=
     MINUS_ASSIGN = 'minus_assign'      # -=
     STAR_ASSIGN = 'star_assign'        # *=
@@ -86,7 +79,6 @@ OPERATORS = {
     '>=': TokenType.GREATER_EQUAL,
     '<=': TokenType.LESS_EQUAL,
     '!=': TokenType.NOT_EQUAL,
-    # Atribuição composta
     '+=': TokenType.PLUS_ASSIGN,
     '-=': TokenType.MINUS_ASSIGN,
     '*=': TokenType.STAR_ASSIGN,
@@ -94,8 +86,6 @@ OPERATORS = {
     '[': TokenType.LBRACKET,  # Usado para arrays
     ']': TokenType.RBRACKET,
 }
-
-
 
 RESERVED_KEYWORDS = {
     'exit': TokenType.EXIT,
@@ -157,7 +147,7 @@ class Tokenizer:
                     self.buffer.append(aux.consume())
                     while aux.peak() is not None and aux.peak().isdigit():
                         self.buffer.append(aux.consume())
-                    self.buffer.append("0")  # To handle the case where the float literal ends
+                    self.buffer.append("0")  
                     buf = aux.create_buffer(self.buffer)
                     tokens.append(Token(TokenType.FLOAT_LIT, buf))
                     continue
@@ -167,12 +157,11 @@ class Tokenizer:
                     continue
             
             elif aux.peak() == '"':
-                aux.consume() # Consome a aspa de abertura "
+                aux.consume() 
                 
                 while aux.peak() is not None and aux.peak() != '"':
                     self.buffer.append(aux.consume())
                 
-                # Verifica se a string foi terminada corretamente
                 if aux.peak() is None:
                     raise RuntimeError("String não terminada. Esperado '\"'.")
                 

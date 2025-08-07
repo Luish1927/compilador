@@ -1,5 +1,3 @@
-# symbol_table.py
-
 from dataclasses import dataclass
 from tokenization import TokenType
 
@@ -8,7 +6,6 @@ class Symbol:
     """Representa um identificador (variável, função, etc.) no código."""
     name: str
     type: TokenType # ex: TokenType.INT, TokenType.STRING
-    # Futuramente, pode-se adicionar 'kind' (variável, função), etc.
 
 class SymbolTable:
     """
@@ -16,7 +13,6 @@ class SymbolTable:
     Funciona como uma pilha de escopos, onde o escopo mais interno está no final da lista.
     """
     def __init__(self):
-        # A pilha de escopos. Cada escopo é um dicionário de {nome_simbolo: ObjetoSymbol}.
         self.scope_stack: list[dict[str, Symbol]] = [{}] # Inicia com o escopo global
 
     def push_scope(self):
@@ -46,7 +42,6 @@ class SymbolTable:
         Procura por um símbolo pelo nome, do escopo mais interno para o mais externo.
         Retorna o objeto Symbol se encontrado, senão retorna None.
         """
-        # Percorre a pilha de escopos de trás para frente (do atual para o global)
         for scope in reversed(self.scope_stack):
             if name in scope:
                 return scope[name]
